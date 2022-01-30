@@ -8,12 +8,17 @@ class SearchBar extends Component {
     }
     render() { //every react method created that is class based must have a render method
         return (
-            <div>
+            <div className="search-bar">
                 <input
                     value={this.state.term} 
-                    onChange={event => this.setState({term: event.target.value })} />
-            </div>
+                    onChange={event => this.onInputChange(event.target.value)} />     
+            </div>//onchange event, when the content of the inpuch change it no call oniput... function
         );
+    }
+
+    onInputChange(term) {
+        this.setState({term});
+        this.props.onSearchTermChange(term);
     }
 }
 //FUNCTIONAL BASED COMPONENT

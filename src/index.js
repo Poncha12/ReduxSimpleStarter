@@ -1,9 +1,11 @@
+import _ from 'lodash';
 import React, {Component} from 'react';
 import reactDOM from "react-dom";
 import YTSearch from "youtube-api-search";
 
 import SearchBar from "./components/search_bar";
 import VideoList from './components/video_list';
+import VideoDetail from './components/vedeo_detail';
 
 const API_KEY = "AIzaSyBPM_A9Nw60e4V3uzm012JJ0we1jtw0Dio";
 
@@ -14,18 +16,31 @@ class App extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {videos: []};
+        this.state = {
+            videos: [],
+            selectedVideo: null
+        };
 
-        YTSearch({key: API_KEY, term: 'sufbords'}, (videos) => {  //earch surfboad
-            this.setState({videos}) // = this.setState({videos: videos})
-        });
-
+        this.videoSearch('football');
     }
+
+    videoSearch(term){ //A method, videoSearch
+        YTSearch({key: API_KEY, term: term}, (videos) => {  //earch surfboad
+            this.setState({
+                videos: videos,
+                selectedVideo: videos[0]
+            }) // = this.setState({videos: videos})
+        });
+    }
+
     render() {
         return (
             <div>
-                <SearchBar />
-                <VideoList videos={this.state.videos}/>
+                <SearchBar onSearchTermChange={term => this.videoSearch(term)}/>
+                <VideoDetail video={this.state.selectedVideo}/>
+                <VideoList 
+                    onVideoSelect={selectedVideo => this.setState({selectedVideo})} //function onVideoSelect that takes a video (selectedVideo) and update app state ith the ne video
+                    videos={this.state.videos}/>
             </div>
         );
     }   
